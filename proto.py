@@ -7,7 +7,7 @@ model = joblib.load('model.joblib')
 scaler = joblib.load('scaler.joblib')
 label_encoder = joblib.load('label_encoder.joblib')
 
-st.title("🌾 Crop Recommendation System 🌱")
+st.title("🌾 Crop Recommendation System")
 
 # Input sliders for N, P, K with emojis
 N = st.slider("🧪 Nitrogen (N)", min_value=0, max_value=140, value=40, step=1)
