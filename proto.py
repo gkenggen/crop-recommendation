@@ -7,7 +7,7 @@ model = joblib.load('model.joblib')
 scaler = joblib.load('scaler.joblib')
 label_encoder = joblib.load('label_encoder.joblib')
 
-st.title("🌾 Crop Recommendation System 🌾")
+st.title("🌾 Crop Recommendation System")
 
 # Input sliders for soil nutrients and environmental factors
 N = st.slider("Nitrogen (N) level", 0, 140, 40)
