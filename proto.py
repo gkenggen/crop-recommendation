@@ -2,32 +2,35 @@ import streamlit as st
 import numpy as np
 import joblib
 
-# Load model and preprocessors
+# Load model, scaler, label encoder (adjust paths as needed)
 model = joblib.load('model.joblib')
 scaler = joblib.load('scaler.joblib')
 label_encoder = joblib.load('label_encoder.joblib')
 
-st.set_page_config(page_title="Crop Recommendation System", layout="centered")
-st.title("🌾 Crop Recommendation System")
+st.title("🌾 Crop Recommendation System 🌱")
 
-st.markdown("Adjust the values below based on your soil and weather conditions:")
+# Input sliders for N, P, K with emojis
+N = st.slider("🧪 Nitrogen (N)", min_value=0, max_value=140, value=40, step=1)
+P = st.slider("🧪 Phosphorus (P)", min_value=0, max_value=140, value=40, step=1)
+K = st.slider("🧪 Potassium (K)", min_value=0, max_value=140, value=40, step=1)
 
-# User input sliders and selects
-n = st.selectbox('Nitrogen (N)', range(0, 150, 5))
-p = st.selectbox('Phosphorus (P)', range(0, 150, 5))
-k = st.selectbox('Potassium (K)', range(0, 150, 5))
+# Input sliders for temperature, humidity, pH, and rainfall with emojis
+temperature = st.slider("🌡️ Temperature (°C)", min_value=0.0, max_value=50.0, value=25.0, step=0.1)
+humidity = st.slider("💧 Humidity (%)", min_value=0.0, max_value=100.0, value=50.0, step=0.1)
+ph = st.slider("🧴 pH value", min_value=0.0, max_value=14.0, value=6.5, step=0.1)
+rainfall = st.slider("☔ Rainfall (mm)", min_value=0.0, max_value=300.0, value=100.0, step=0.1)
 
-temperature = st.slider('Temperature (°C)', 0.0, 50.0, 25.0)
-humidity = st.slider('Humidity (%)', 10.0, 100.0, 50.0)
-ph = st.slider('pH Level', 3.5, 9.5, 6.5)
-rainfall = st.slider('Rainfall (mm)', 0.0, 300.0, 100.0)
+if st.button("🌟 Predict Crop"):
+    # Prepare input data as numpy array
+    input_data = np.array([[N, P, K, temperature, humidity, ph, rainfall]])
 
-# Prepare and scale input
-input_data = np.array([[n, p, k, temperature, humidity, ph, rainfall]])
-input_scaled = scaler.transform(input_data)
+    # Scale inputs
+    input_scaled = scaler.transform(input_data)
 
-# Predict button
-if st.button("Predict Crop"):
-    prediction = model.predict(input_scaled)
-    predicted_crop = label_encoder.inverse_transform(prediction)
-    st.success(f"✅ Recommended Crop: **{predicted_crop[0].title()}**")
+    # Predict using the trained model
+    pred_encoded = model.predict(input_scaled)
+
+    # Decode the predicted label
+    predicted_crop = label_encoder.inverse_transform(pred_encoded)[0]
+
+    st.success(f"🌿 The recommended crop is: {predicted_crop}")
